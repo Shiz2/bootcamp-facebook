@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Container, Header, SearchBar, UsersContainer } from './styles'
 import UserCard from './components/UserCard'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
 
 class Users extends Component {
   constructor(props) {
@@ -14,13 +16,16 @@ class Users extends Component {
     this.setState({ searchText: e.target.value })
   }
 
+  GET_USERS = gql`
+    query {
+      users {
+        name
+        picture
+      }
+    }
+  `
+
   render() {
-    const users = [...Array(10)].map(() => (
-      <UserCard
-        image="https://static.stereogum.com/uploads/2018/01/GettyImages-889998292-1517445539-640x462.jpg"
-        name="Rivers Cuomo"
-      />
-    ))
     return (
       <Container>
         <Header>
@@ -30,7 +35,18 @@ class Users extends Component {
             onChange={this.handleChange}
           />
         </Header>
-        <UsersContainer>{users}</UsersContainer>
+        <UsersContainer>
+          <Query query={this.GET_USERS}>
+            {({ loading, error, data }) => {
+              if (loading) return <p>Loading...</p>
+              if (error) return <p>Error :(</p>
+
+              return data.users.map(user => (
+                <UserCard image={user.picture} name={user.name} />
+              ))
+            }}
+          </Query>
+        </UsersContainer>
       </Container>
     )
   }
