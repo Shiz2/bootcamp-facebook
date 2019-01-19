@@ -16,11 +16,21 @@ class Users extends Component {
     this.setState({ searchText: e.target.value })
   }
 
+  handleLogin = () => {
+    this.props.history.push('/users')
+  }
+
   GET_USERS = gql`
     query {
       users {
-        name
-        picture
+        message
+        success
+        code
+        users {
+          id
+          name
+          picture
+        }
       }
     }
   `
@@ -30,7 +40,7 @@ class Users extends Component {
       <Container>
         <Header>
           <SearchBar
-            classname="serachbar"
+            className="serachbar"
             placeholder="Search"
             onChange={this.handleChange}
           />
@@ -40,9 +50,15 @@ class Users extends Component {
             {({ loading, error, data }) => {
               if (loading) return <p>Loading...</p>
               if (error) return <p>Error :(</p>
+              // if (!data.users.success) return <p>{data.users.message} </p>
 
-              return data.users.map(user => (
-                <UserCard image={user.picture} name={user.name} />
+              return data.users.users.map(user => (
+                <UserCard
+                  key={user.id}
+                  image={user.picture}
+                  name={user.name}
+                  id={user.id}
+                />
               ))
             }}
           </Query>
