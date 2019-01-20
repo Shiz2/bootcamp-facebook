@@ -42,6 +42,7 @@ class Login extends Component {
             } = data
             localStorage.setItem('token', token)
             this.props.history.push('/users')
+            this.props.authenticateUser()
           } else {
             this.setState({ error: data.loginUser.message })
           }

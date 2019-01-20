@@ -6,6 +6,7 @@ import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
+import PrivateRoute from './PrivateRoute'
 import theme from './theme'
 import config from './config'
 import Navbar from './components/Navbar'
@@ -14,6 +15,7 @@ import Users from './containers/Users/'
 import User from './containers/User'
 import { Flex } from 'grid-styled'
 
+// configures all routes to send headers
 const httpLink = createHttpLink({
   uri: config.graphqlUrl
 })
@@ -47,8 +49,8 @@ class App extends Component {
               <Navbar />
               <Switch>
                 <Route exact path="/" component={Home} />
-                <Route exact path="/users" component={Users} />
-                <Route path="/user/:id" component={User} />
+                <PrivateRoute exact path="/users" component={Users} />
+                <PrivateRoute path="/user/:id" component={User} />
               </Switch>
             </Flex>
           </ApolloProvider>

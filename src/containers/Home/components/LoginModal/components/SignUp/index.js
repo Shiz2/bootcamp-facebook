@@ -41,6 +41,7 @@ class SignUp extends Component {
             } = data
             localStorage.setItem('token', token)
             this.props.history.push('/users')
+            this.props.authenticateUser()
           }
           return <div>{data.createUser.message} </div>
         }}
